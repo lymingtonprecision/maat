@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+{% for key in lookup('fileglob', '../authorized_keys/*.pub').split(',') %}
+# {{ key | basename }}
+{{ lookup('file', key) }}
+{% endfor %}

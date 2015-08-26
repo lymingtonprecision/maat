@@ -1,0 +1,16 @@
+#!/bin/sh
+
+cat <<MOTD
+
+
+Remember to set the following environment variables
+before running Ansible:
+
+* ANSIBLE_REMOTE_USER (the user Ansible will SSH as)
+* VSPHERE_SERVER
+* VSPHERE_USER
+* VSPHERE_PASSWORD
+* VSPHERE_PATH (the vSphere inventory path to the VMs)
+
+
+MOTD

@@ -39,6 +39,10 @@ Vagrant.configure(2) do |config|
   SHELL
 
   config.vm.provision "shell", inline: <<-SHELL
+    echo "" > /home/vagrant/.profile
+    echo "if [ -f ~/.bashrc ]; then" >> /home/vagrant/.profile
+    echo "  . ~/.bashrc" >> /home/vagrant/.profile
+    echo "fi" >> /home/vagrant/.profile
     echo "" >> /home/vagrant/.profile
     echo "# start ssh agent" >> /home/vagrant/.profile
     echo "eval \\$(ssh-agent)" >> /home/vagrant/.profile

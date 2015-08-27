@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
   - name: Set new random root password
-    sudo: yes
-    user: name=root password="{{lookup('password', '/tmp/ansibleremoterootpwd length=30')}}"
+    become: true
+    user: name=root password="{{ lookup('password', '/tmp/ansibleremoterootpwd length=30') }}"
 
 - include: authorized_keys.yml

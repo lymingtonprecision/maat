@@ -64,6 +64,6 @@ Vagrant.configure(2) do |config|
   SHELL
 
   config.vm.provision "shell", inline: <<-SHELL
-    echo "alias ansible-init-hosts='ansible-playbook init.yml -i init.hosts --private-key=init.key'" >> /home/vagrant/.bash_aliases
+    echo "alias ansible-init-hosts='ansible-playbook init.yml -i /tmp/init.hosts --private-key=init.key'" >> /home/vagrant/.bash_aliases
   SHELL
 end

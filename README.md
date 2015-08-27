@@ -274,13 +274,13 @@ less you lock yourself out.)
    [creating a virtual machine template](#create-vm-template) above)
    and power on the created VM.
 
-2. Add the VMs IP address to the `init.hosts` file:
+2. Add the VMs IP address to the `/tmp/init.hosts` file:
 
-       echo <vm ip> > init.hosts
+       echo <vm ip> > /tmp/init.hosts
 
 3. Run the `init.yml` playbook against the VM:
 
-       ansible-playbook init.yml -i init.hosts --private-key=init.key
+       ansible-playbook init.yml -i /tmp/init.hosts --private-key=init.key
 
    `init.key` should be the path to an authorised SSH private key with
    which Ansible can authenticate (this is an expected artifact when
@@ -290,9 +290,9 @@ less you lock yourself out.)
 
        ansible-init-hosts
 
-   (This assumes that the `init.key`, `init.hosts`, and `init.yml`
-   files exist in the `/vagrant/ansible` directory on the control
-   machine VM.)
+   (This assumes that the `init.key` and `init.yml` files exist in the
+   `/vagrant/ansible` directory on the control machine VM and that
+   you've populated `/tmp/init.hosts`.)
 
 ### Add or Remove a Role to/from a Virtual Machine
 

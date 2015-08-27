@@ -79,7 +79,9 @@ suitable template within vSphere perform the following steps:
 
    1. Download version 1.2.3 of `docker-py`:
 
-          curl -o docker-py.tar.gz https://pypi.python.org/packages/source/d/docker-py/docker-py-1.2.3.tar.gz
+      ```sh
+      curl -o docker-py.tar.gz https://pypi.python.org/packages/source/d/docker-py/docker-py-1.2.3.tar.gz
+      ```
 
       (Note: later versions of `docker-py` use an incompatible version
       of the Docker API to that used by the Ansible 1.9.2 Docker
@@ -87,36 +89,48 @@ suitable template within vSphere perform the following steps:
 
    2. Install `tar` and `setup.py`:
 
-          sudo tdnf install tar
-          sudo tdnf install python-setuptools
+      ```sh
+      sudo tdnf install tar
+      sudo tdnf install python-setuptools
+      ```
 
    3. Extract the library files:
 
-          tar -zxf docker-py.tar.gz
+      ```sh
+      tar -zxf docker-py.tar.gz
+      ```
 
    4. Build and install the library:
 
-          cd docker-py
-          python setup.py build
-          sudo python setup.py install
+      ```sh
+      cd docker-py
+      python setup.py build
+      sudo python setup.py install
+      ```
 
    5. Clean up
 
-          cd ..
-          sudo rm -rf docker-py-{version}
-          rm docker-py.tar.gz
-          sudo tdnf erase tar python-setuptools
+      ```sh
+      cd ..
+      sudo rm -rf docker-py-{version}
+      rm docker-py.tar.gz
+      sudo tdnf erase tar python-setuptools
+      ```
 
 3. Install `sudo`:
 
-       tdnf install sudo
+   ```sh
+   tdnf install sudo
+   ```
 
 4. Create an "admin" user account on the VM.
 
    Choose whatever you like for an account name, so long as it's the
    same across all the hosts.
 
-       useradd -G sudo -m <username>
+   ```sh
+   useradd -G sudo -m {username}
+   ```
 
 5. Add the admin user to the `sudoers` _without password
    authentication_:
@@ -124,7 +138,9 @@ suitable template within vSphere perform the following steps:
    1. Run `visudo`
    2. Add a new entry at the end of the file for:
 
-          <username> ALL=(ALL) NOPASSWD: ALL
+      ```
+      {username} ALL=(ALL) NOPASSWD: ALL
+      ```
 
 6. Create a temporary SSH key to use when initialising new VMs and set
    it as an authorised key for the admin account you've created.
@@ -140,22 +156,28 @@ suitable template within vSphere perform the following steps:
 
    1. On the Ansible Control Machine:
 
-          ssh-keygen -t rsa -b 4096 -f init.key
+      ```sh
+      ssh-keygen -t rsa -b 4096 -f init.key
+      ```
 
    2. Copy the resulting `init.key.pub` file to the template VM.
 
    3. On the template VM, add the key as an authorised key for the
       admin user:
 
-          mkdir /home/<username>/.ssh
-          cat <path/to/init.key.pub> > /home/<username>/.ssh/authorized_keys
-          chmod 0700 /home/<username>/.ssh
-          chmod 0600 /home/<username>/.ssh/authorized_keys
-          chown -R <username> /home/<username>/.ssh
+      ```sh
+      mkdir /home/{username}/.ssh
+      cat {path/to/init.key.pub} > /home/{username}/.ssh/authorized_keys
+      chmod 0700 /home/{username}/.ssh
+      chmod 0600 /home/{username}/.ssh/authorized_keys
+      chown -R {username} /home/{username}/.ssh
+      ```
 
    4. Disable the admin users password:
 
-          passwd -d <username>
+      ```sh
+      passwd -d {username}
+      ```
 
 7. Power off the VM.
 8. Convert the VM to a template.
@@ -174,12 +196,16 @@ Any `ansible` invocation assumes two things:
 1. That you've defined `ANSIBLE_REMOTE_USER` by setting it to the username
    Ansible should connect as.
 
-       export ANSIBLE_REMOTE_USER=username
+   ```sh
+   export ANSIBLE_REMOTE_USER={username}
+   ```
 
 2. That you've added an SSH private key to the SSH agent with which
    Ansible will be able to connect.
 
-       ssh-add <path/to/private.key>
+   ```sh
+   ssh-add {path/to/private.key}
+   ```
 
    (You can alternatively set `ANSIBLE_PRIVATE_KEY_FILE` to the path
    to your private key file.)
@@ -212,21 +238,25 @@ even the initialisation user's key file.
 
 1. Create a `.ssh` folder in your `$HOME` directory.
 
-   On Windows this is typically `c:\users\<your username>`, but check
+   On Windows this is typically `c:\users\{your username}`, but check
    the `HOME` `env`ironment variable.
 
 2. Start the Vagrant VM included in this repository and `ssh` into it.
 
 3. Use `ssh-keygen` to generate a new key pair:
 
-       ssh-keygen -t rsa -b 4096 -f /vagrant/.ssh/id_rsa -C "your@email-address.com"
+   ```sh
+   ssh-keygen -t rsa -b 4096 -f /vagrant/.ssh/id_rsa -C "your@email-address.com"
+   ```
 
    It is **strongly** advised that you enter a _strong_ passphrase
    when prompted.
 
 4. Copy your public key to the authorised keys directory:
 
-       cp /vagrant/.ssh/id_rsa.pub /vagrant/authorized_keys/<unique name>.pub
+   ```sh
+   cp /vagrant/.ssh/id_rsa.pub /vagrant/authorized_keys/{unique name}.pub
+   ```
 
    Note that you need to provide a unique name for your key,
    usernames/email addresses work best as they are easily uniquely
@@ -253,7 +283,9 @@ hosts:
 2. Instead of running the `site.yml` playbook run
    `authorized_keys.yml`:
 
-       ansible-playbook authorized_keys.yml
+   ```sh
+   ansible-playbook authorized_keys.yml
+   ```
 
 (It should, perhaps, go without saying but you can't add _your own_
 key. You'll need to give your public key to someone who already has
@@ -276,11 +308,15 @@ less you lock yourself out.)
 
 2. Add the VMs IP address to the `/tmp/init.hosts` file:
 
-       echo <vm ip> > /tmp/init.hosts
+   ```sh
+   echo {vm ip} > /tmp/init.hosts
+   ```
 
 3. Run the `init.yml` playbook against the VM:
 
-       ansible-playbook init.yml -i /tmp/init.hosts --private-key=init.key
+   ```sh
+   ansible-playbook init.yml -i /tmp/init.hosts --private-key=init.key
+   ```
 
    `init.key` should be the path to an authorised SSH private key with
    which Ansible can authenticate (this is an expected artifact when
@@ -288,7 +324,9 @@ less you lock yourself out.)
 
    For convenience the above command is provided as a shell alias:
 
-       ansible-init-hosts
+   ```sh
+   ansible-init-hosts
+   ```
 
    (This assumes that the `init.key` and `init.yml` files exist in the
    `/vagrant/ansible` directory on the control machine VM and that
@@ -316,7 +354,9 @@ The default Ansible hosts file (`/etc/ansible/hosts`) is linked to the
 included dynamic vSphere inventory script so all you need to do is
 specify the playbook to run:
 
-    ansible-playbook site.yml
+```sh
+ansible-playbook site.yml
+```
 
 ## Playbook Reference
 

@@ -75,18 +75,50 @@ suitable template within vSphere perform the following steps:
    **but** don't power off the VM at the end (or convert it to a
    template just yet.)
 
-2. Install `sudo`:
+2. Install the [`docker-py`][docker-py] library
+
+   1. Download version 1.2.3 of `docker-py`:
+
+          curl -o docker-py.tar.gz https://pypi.python.org/packages/source/d/docker-py/docker-py-1.2.3.tar.gz
+
+      (Note: later versions of `docker-py` use an incompatible version
+      of the Docker API to that used by the Ansible 1.9.2 Docker
+      module.)
+
+   2. Install `tar` and `setup.py`:
+
+          sudo tdnf install tar
+          sudo tdnf install python-setuptools
+
+   3. Extract the library files:
+
+          tar -zxf docker-py.tar.gz
+
+   4. Build and install the library:
+
+          cd docker-py
+          python setup.py build
+          sudo python setup.py install
+
+   5. Clean up
+
+          cd ..
+          sudo rm -rf docker-py-{version}
+          rm docker-py.tar.gz
+          sudo tdnf erase tar python-setuptools
+
+3. Install `sudo`:
 
        tdnf install sudo
 
-2. Create an "admin" user account on the VM.
+4. Create an "admin" user account on the VM.
 
    Choose whatever you like for an account name, so long as it's the
    same across all the hosts.
 
        useradd -G sudo -m <username>
 
-3. Add the admin user to the `sudoers` _without password
+5. Add the admin user to the `sudoers` _without password
    authentication_:
 
    1. Run `visudo`
@@ -94,7 +126,7 @@ suitable template within vSphere perform the following steps:
 
           <username> ALL=(ALL) NOPASSWD: ALL
 
-3. Create a temporary SSH key to use when initialising new VMs and set
+6. Create a temporary SSH key to use when initialising new VMs and set
    it as an authorised key for the admin account you've created.
 
    This key does not _need_ to be secured by a pass-phrase as it will
@@ -125,10 +157,11 @@ suitable template within vSphere perform the following steps:
 
           passwd -d <username>
 
-4. Power off the VM.
-5. Convert the VM to a template.
+7. Power off the VM.
+8. Convert the VM to a template.
 
 [photon-vsphere-deploy]: https://github.com/lymingtonprecision/photon-vsphere-deploy
+[docker-py]: https://github.com/docker/docker-py
 
 ## Tasks and How To Accomplish Them
 

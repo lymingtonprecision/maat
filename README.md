@@ -103,7 +103,7 @@ suitable template within vSphere perform the following steps:
    4. Build and install the library:
 
       ```sh
-      cd docker-py
+      cd docker-py-1.2.3
       python setup.py build
       sudo python setup.py install
       ```
@@ -112,9 +112,9 @@ suitable template within vSphere perform the following steps:
 
       ```sh
       cd ..
-      sudo rm -rf docker-py-{version}
-      rm docker-py.tar.gz
-      sudo tdnf erase tar python-setuptools
+      sudo rm -rf docker-py*
+      sudo tdnf erase tar
+      sudo tdnf erase python-setuptools
       ```
 
 3. Install `sudo`:
@@ -376,7 +376,38 @@ Configures all currently defined hosts to their tagged roles.
 
 The supported roles that can be added to VMs are:
 
-_Nothing yet._
+### `consul`
+
+Runs a [`consul`](https://www.consul.io/) server gent on the VM,
+joined in a cluster with any other VMs with the same tag.
+
+A [`registrator`](http://gliderlabs.com/registrator/) service is also
+started on the host for automatic registration of other services
+within the Consul service directory.
+
+##### Domain
+
+The Consul DNS interface will respond to queries under the
+`consul.{{ ansible_domain }}` of the VM upon which it runs.
+
+(E.g. if your VM's FQDN is `sr01.example.com` then queries will be
+resolved under `consul.example.com`.)
+
+This enables us to delegate the `consul` sub-domain to the Consul
+hosts within our primary domain servers.
+
+##### Ports
+
+Exposes ports `8300-8302`, `8400`, `8500`, `8600` and `53` on the host.
+
+`8500` is the Consul Web Interface port.
+
+`53` and `8600` are the
+[DNS interface](https://www.consul.io/docs/agent/dns.html) ports
+
+##### Data
+
+Stored under `/data/consul` on the host.
 
 ## License
 

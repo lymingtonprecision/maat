@@ -358,6 +358,9 @@ specify the playbook to run:
 ansible-playbook site.yml
 ```
 
+(Too much to type? Use the alias `apb` as shorthand for
+`ansible-playbook`.)
+
 ## Playbook Reference
 
 ### `init.yml`

@@ -378,7 +378,7 @@ The supported roles that can be added to VMs are:
 
 ### `consul`
 
-Runs a [`consul`](https://www.consul.io/) server gent on the VM,
+Runs a [Consul](https://www.consul.io/) server agent on the VM,
 joined in a cluster with any other VMs with the same tag.
 
 A [`registrator`](http://gliderlabs.com/registrator/) service is also

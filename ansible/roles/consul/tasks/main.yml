@@ -1,0 +1,54 @@
+---
+- name: create consul data directory
+  become: yes
+  file: path=/data/consul state=directory mode=0755
+
+- name: ensure consul container is running
+  become: yes
+  docker:
+    name: consul
+    image: gliderlabs/consul-server
+    state: started
+    restart_policy: on-failure
+    restart_policy_retry: 10
+    hostname: "{{ ansible_nodename }}"
+    volumes:
+      - /data/consul:/data
+    ports:
+      - "{{ ansible_default_ipv4.address }}:8300:8300"
+      - "{{ ansible_default_ipv4.address }}:8301:8301"
+      - "{{ ansible_default_ipv4.address }}:8301:8301/udp"
+      - "{{ ansible_default_ipv4.address }}:8302:8302"
+      - "{{ ansible_default_ipv4.address }}:8302:8302/udp"
+      - "{{ ansible_default_ipv4.address }}:8400:8400"
+      - 8500:8500
+      - 8600:8600
+      - 8600:8600/udp
+      - 53:8600
+      - 53:8600/udp
+    env:
+      DNS_RESOLVES: consul
+    command: >
+      -server
+      -domain "consul.{{ ansible_domain }}"
+      -advertise {{ ansible_default_ipv4.address }}
+      -bootstrap-expect {{ groups['consul'] | length }}
+      {% for host in groups['consul'] %}
+        {% if host != ansible_nodename %}
+          -retry-join {{ hostvars[host]['ansible_default_ipv4']['address'] }}
+        {% endif %}
+      {% endfor %}
+      -ui-dir /ui
+
+- name: ensure registrator service is running
+  become: yes
+  docker:
+    name: registrator
+    image: gliderlabs/registrator
+    state: started
+    restart_policy: on-failure
+    restart_policy_retry: 10
+    net: host
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: consul://localhost:8500

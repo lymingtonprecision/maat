@@ -58,6 +58,9 @@ Vagrant.configure(2) do |config|
     echo "fi" >> /home/vagrant/.profile
 
     echo "" >> /home/vagrant/.profile
+    echo "export PYTHONWARNINGS=\"ignore:Unverified HTTPS request\"" >> /home/vagrant/.profile
+
+    echo "" >> /home/vagrant/.profile
     echo "# cd to ansible playbook directory" >> /home/vagrant/.profile
     echo "cd /vagrant/ansible" >> /home/vagrant/.profile
   SHELL
@@ -70,5 +73,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
     echo "alias ansible-init-hosts='ansible-playbook init.yml -i /tmp/init.hosts --private-key=init.key'" > /home/vagrant/.bash_aliases
     echo "alias apb=ansible-playbook" >> /home/vagrant/.bash_aliases
+    echo "alias ng='python /vagrant/ansible/name_generator.py'" >> /home/vagrant/.bash_aliases
   SHELL
 end

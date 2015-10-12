@@ -306,6 +306,12 @@ less you lock yourself out.)
    [creating a virtual machine template](#create-vm-template) above)
    and power on the created VM.
 
+   The names of the VMs aren't particularly important but if you're
+   stuck for what to call it use the included `name_generator`
+   script. Just type `ng` at the console and a new, random, name will
+   be returned (the names are checked against the existing VMs to
+   ensure uniqueness.)
+
 2. Add the VMs IP address to the `/tmp/init.hosts` file:
 
    ```sh

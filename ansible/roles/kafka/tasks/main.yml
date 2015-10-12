@@ -1,0 +1,15 @@
+---
+- name: create kafka data directory
+  become: yes
+  file: path=/data/kafka state=directory mode=0755
+
+- name: ensure kafka container is running
+  become: yes
+  docker:
+    name: kafka
+    image: spotify/docker-kafka
+    state: started
+    restart_policy: on-failure
+    restart_policy_retry: 10
+    volumes:
+      - /data/kafka:/

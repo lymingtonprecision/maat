@@ -1,0 +1,7 @@
+---
+- name: restart consul
+  sudo: yes
+  docker:
+    name: consul
+    image: gliderlabs/consul-server
+    state: restarted

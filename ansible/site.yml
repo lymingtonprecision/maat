@@ -3,3 +3,8 @@
   roles:
     - consul-server
     - registrator
+
+- hosts: all
+  roles:
+    - consul-agent
+    - registrator

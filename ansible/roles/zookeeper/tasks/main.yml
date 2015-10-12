@@ -16,10 +16,10 @@
     volumes:
       - /data/zookeeper:/data
     ports:
-      - 2172:2172
-      - 2173:2173
-      - 2181:2181
+      - "{{ ansible_default_ipv4.address }}:2172:2172"
+      - "{{ ansible_default_ipv4.address }}:2173:2173"
+      - "{{ ansible_default_ipv4.address }}:2181:2181"
       - "{{ ansible_default_ipv4.address }}::8080"
     env:
-      ID: 1
+      ID: "{{ node_id }}"
       QUORUM: "{% for host in groups['zookeeper'] if not host == ansible_nodename %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:2181 {% endfor %}"

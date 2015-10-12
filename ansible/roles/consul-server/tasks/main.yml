@@ -29,7 +29,6 @@
     env:
       DNS_RESOLVES: consul
     command: >
-      -server
       -domain "consul.{{ ansible_domain }}"
       -advertise {{ ansible_default_ipv4.address }}
       -bootstrap-expect {{ groups['consul'] | length }}

@@ -1,0 +1,7 @@
+---
+- name: restart registrator
+  sudo: yes
+  docker:
+    name: registrator
+    image: gliderlabs/registrator
+    state: restarted

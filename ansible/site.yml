@@ -2,3 +2,4 @@
 - hosts: consul
   roles:
     - consul-server
+    - registrator

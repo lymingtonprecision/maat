@@ -38,16 +38,3 @@
         {% endif %}
       {% endfor %}
       -ui-dir /ui
-
-- name: ensure registrator service is running
-  become: yes
-  docker:
-    name: registrator
-    image: gliderlabs/registrator
-    state: started
-    restart_policy: on-failure
-    restart_policy_retry: 10
-    net: host
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock
-    command: consul://localhost:8500

@@ -75,6 +75,11 @@ suitable template within vSphere perform the following steps:
    **but** don't power off the VM at the end (or convert it to a
    template just yet.)
 
+   When setting the OVF properties add the following additional property:
+
+   * `node-id`, the unique node ID to use for services running on this
+     VM that require one. A user configurable integer property.
+
 2. Install the [`docker-py`][docker-py] library
 
    1. Download version 1.2.3 of `docker-py`:

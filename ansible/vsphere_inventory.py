@@ -369,6 +369,16 @@ def defaultIPv4Address(vm):
     return ips[0]
 
 
+def vAppPropertyValue(vm, propertyName):
+    props = vm.config.vAppConfig.property
+    prop = filter(lambda p: p.label == propertyName, props)
+    vals = map(lambda p: p.value, prop)
+
+    if len(vals) > 0:
+        return vals[0]
+    else:
+        return None
+
 def vmToDictionary(vm):
     '''
     Transforms a vSphere VirtualMachine instance to a minimal
@@ -379,7 +389,8 @@ def vmToDictionary(vm):
          'status': vm.runtime.powerState,
          'hostname': vm.summary.guest.hostName or vm.name,
          'ipAddresses': vmIPAddresses(vm),
-         'ansible_ssh_host': defaultIPv4Address(vm)}
+         'ansible_ssh_host': defaultIPv4Address(vm),
+         'node_id': vAppPropertyValue(vm, 'node-id')}
 
     return d
 

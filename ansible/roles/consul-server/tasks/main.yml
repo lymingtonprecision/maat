@@ -11,7 +11,7 @@
     state: started
     restart_policy: on-failure
     restart_policy_retry: 10
-    hostname: "{{ ansible_nodename }}"
+    hostname: "{{ ansible_hostname }}"
     volumes:
       - /data/consul:/data
     ports:

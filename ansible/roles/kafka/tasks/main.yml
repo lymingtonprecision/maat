@@ -7,9 +7,16 @@
   become: yes
   docker:
     name: kafka
-    image: spotify/docker-kafka
+    image: ah45/kafka
     state: started
     restart_policy: on-failure
     restart_policy_retry: 10
+    hostname: "{{ ansible_hostname }}.node.dc1.consul.{{ ansible_domain }}"
     volumes:
-      - /data/kafka:/
+      - /data/kafka:/data
+    ports:
+      - "{{ ansible_default_ipv4.address }}:9092:9092"
+    env:
+      ID: "{{ node_id }}"
+      ZOOKEEPER: "zookeeper.service.consul.{{ ansible_domain }}:2181"
+      KAFKA_EXT_HOST: "{{ ansible_default_ipv4.address }}"

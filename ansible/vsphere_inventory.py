@@ -476,5 +476,6 @@ if __name__ == '__main__':
       groups = groupVmsByTag(vms)
       meta = vmMetaData(vms)
       vmList = meta.copy()
+      vmList['all'] = map(lambda vm: vm['hostname'], vms)
       vmList.update(groups)
       print(json.dumps(vmList, indent=4))

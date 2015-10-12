@@ -1,0 +1,7 @@
+---
+- name: restart zookeeper
+  sudo: yes
+  docker:
+    name: zookeeper
+    image: ah45/zookeeper
+    state: restarted

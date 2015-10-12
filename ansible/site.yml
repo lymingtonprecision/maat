@@ -8,3 +8,7 @@
   roles:
     - consul-agent
     - registrator
+
+- hosts: zookeeper
+  roles:
+    - zookeeper

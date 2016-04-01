@@ -1,0 +1,29 @@
+---
+coreos:
+  etcd2:
+    discovery: "https://discovery.etcd.io/9ed1b4672f4e9e5a049af21da54fc8cf"
+    advertise-client-urls: "http://$private_ipv4:2379"
+    initial-advertise-peer-urls: "http://$private_ipv4:2380"
+    listen-client-urls: "http://0.0.0.0:2379"
+    listen-peer-urls: "http://$private_ipv4:2380"
+  fleet:
+    public-ip: "$private_ipv4"
+  flannel:
+    interface: "$private_ipv4"
+
+  update:
+    reboot-strategy: "etcd-lock"
+    group: "beta"
+
+  units:
+    - name: etcd2.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: flanneld.service
+      drop-ins:
+        - name: 50-network-config.conf
+          content: |
+            [Service]
+            ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.99.0.0/16" }'
+      command: start

@@ -1,0 +1,6 @@
+*.pyc
+.vagrant/
+.ssh/
+*/*.key
+ansible/init.hosts
+ansible/init.key.pub
